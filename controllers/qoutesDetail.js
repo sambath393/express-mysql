@@ -1,5 +1,5 @@
 const Logs = require('../models/logs');
-const QoutesDetail = require('../models/QoutesDetail');
+const QoutesDetail = require('../models/qoutesDetail');
 const { tableList } = require('../models/tableDb');
 const { db } = require('../services/config');
 const { filterRolePath } = require('../utils/filter');

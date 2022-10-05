@@ -4,7 +4,7 @@ const {
   createCompanies,
   updateCompanies,
   deleteCompanies,
-} = require('../controllers/companies');
+} = require('../../controllers/companies');
 var router = express.Router();
 
 router

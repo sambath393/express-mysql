@@ -4,13 +4,13 @@ const {
   createInvoices,
   updateInvoices,
   deleteInvoices,
-} = require('../controllers/invoices');
+} = require('../../controllers/invoices');
 const {
   getInvoicesDetail,
   createInvoicesDetail,
   updateInvoicesDetail,
   deleteInvoicesDetail,
-} = require('../controllers/invoicesDetail');
+} = require('../../controllers/invoicesDetail');
 var router = express.Router();
 
 router.route('/').get(getInvoices).post(createInvoices).put(updateInvoices).delete(deleteInvoices);

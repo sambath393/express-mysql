@@ -1,6 +1,6 @@
 var express = require('express');
-const { createRoleName, updateRoleName, deleteRoleName, getRoleName } = require('../controllers/roleName');
-const { createRoles, updateRoles, deleteRoles, getRoles } = require('../controllers/roles');
+const { createRoleName, updateRoleName, deleteRoleName, getRoleName } = require('../../controllers/roleName');
+const { createRoles, updateRoles, deleteRoles, getRoles } = require('../../controllers/roles');
 var router = express.Router();
 
 router.route('/').get(getRoles).post(createRoles).put(updateRoles).delete(deleteRoles);

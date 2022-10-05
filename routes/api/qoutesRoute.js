@@ -1,11 +1,11 @@
 var express = require('express');
-const { createQoutes, getQoutes, updateQoutes, deleteQoutes } = require('../controllers/qoutes');
+const { createQoutes, getQoutes, updateQoutes, deleteQoutes } = require('../../controllers/qoutes');
 const {
   getQoutesDetail,
   createQoutesDetail,
   updateQoutesDetail,
   deleteQoutesDetail,
-} = require('../controllers/qoutesDetail');
+} = require('../../controllers/qoutesDetail');
 var router = express.Router();
 
 router.route('/').get(getQoutes).post(createQoutes).put(updateQoutes).delete(deleteQoutes);
