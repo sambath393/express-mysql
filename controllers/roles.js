@@ -8,11 +8,13 @@ const tablePath = tableList.roles;
 
 async function getRoles(req, res) {
   try {
-    const { rnid } = req.query;
+    const { rnid, paginate } = req.query;
     let data = [];
 
     if (rnid) {
       data = await Roles.getByRoleNamesId(db, rnid)
+    } else if(paginate) {
+      data = await Roles.getAllByPaginate(db, JSON.parse(paginate))
     } else {
       data = await Roles.getAll(db);
     }
@@ -23,7 +25,7 @@ async function getRoles(req, res) {
       action: 'get',
       message: `Get data success.`,
     });
-    res.status(200).json({ message: 'Successful', data });
+    res.status(200).json({ message: 'Successful', ...data });
   } catch (error) {
     await Logs.create(db, {
       created_by: 1,

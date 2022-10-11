@@ -16,11 +16,42 @@ class Roles {
   };
 
   static getAll = async (knex) => {
-    return knex(this.tablePath)
+    const data = await knex(this.tablePath)
       .join(tableList.role_paths, `${this.tablePath}.rpid`, '=', `${tableList.role_paths}.id`)
       .join(tableList.role_names, `${this.tablePath}.rnid`, '=', `${tableList.role_names}.id`)
       .select('*')
+      .groupBy('rnid')
+      .count('rnid', { as: 'rp_count' })
       .column({ rp_name: 'role_paths.name' }, { rn_name: 'role_names.name' });
+
+    return {
+      data,
+    };
+  };
+
+  static getAllByPaginate = async (knex, paginate) => {
+    const total = await knex(tableList.role_names)
+      .count('id', { as: 'count' })
+      .then((res) => res[0].count);
+
+    const data = await knex(this.tablePath)
+      .join(tableList.role_paths, `${this.tablePath}.rpid`, '=', `${tableList.role_paths}.id`)
+      .join(tableList.role_names, `${this.tablePath}.rnid`, '=', `${tableList.role_names}.id`)
+      .select('*')
+      .offset((parseInt(paginate.current, 10) - 1) * parseInt(paginate.limit, 10))
+      .limit(paginate.limit)
+      .groupBy('rnid')
+      .count('rnid', { as: 'rp_count' })
+      .column({ rp_name: 'role_paths.name' }, { rn_name: 'role_names.name' });
+      
+    return {
+      data,
+      paginate: {
+        current: parseInt(paginate.current, 10),
+        limit: parseInt(paginate.limit, 10),
+        total,
+      },
+    };
   };
 
   static getByRoleNamesId = async (knex, rnid) => {

@@ -4,7 +4,7 @@ const { tableList } = require('../models/tableDb');
 const { db } = require('../services/config');
 const { filterRolePath } = require('../utils/filter');
 
-const tablePath = tableList.role_names
+const tablePath = tableList.role_names;
 
 async function getRoleName(req, res) {
   try {
@@ -32,9 +32,16 @@ async function getRoleName(req, res) {
 
 async function createRoleName(req, res) {
   try {
+    const { roles } = req.query;
     const data = req.body;
-    const id = await RoleName.create(db, data);
+    let id = null;
     
+    if (roles) {
+      id = await RoleName.createWithRoles(db, data);
+    } else {
+      id = await RoleName.create(db, data);
+    }
+
     await Logs.create(db, {
       created_by: 1,
       rpid: filterRolePath(tablePath),

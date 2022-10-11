@@ -41,6 +41,9 @@ class GenerateDbTbl {
 
     // Add Data
     await this.createRolePathData(knex);
+
+    // Add Super admin
+    await this.insertSuperAdmin(knex)
   };
 
   static createRolePathTbl = async (knex) => {
@@ -65,6 +68,7 @@ class GenerateDbTbl {
       table.foreign('rpid').references(`${tableList.role_paths}.id`);
       table.integer('rnid').unsigned();
       table.foreign('rnid').references(`${tableList.role_names}.id`);
+      table.boolean('view');
       table.boolean('create');
       table.boolean('update');
       table.boolean('delete');
@@ -195,6 +199,33 @@ class GenerateDbTbl {
 
     await knex(tableList.role_paths).insert(newArr);
   };
+
+  static insertSuperAdmin = async (knex) => {
+    await knex(tableList.role_names).insert({name: 'Super Admin', created_at: new Date()})
+
+    const getRolePath = await knex(tableList.role_paths).select();
+
+    const getData = getRolePath.map(load => ({
+      rnid: 1,
+      rpid: load.id,
+      view: 1,
+      create: 1,
+      update: 1,
+      delete: 1,
+      created_at: new Date()
+    }))
+
+    await knex(tableList.roles).insert(getData)
+    await knex(tableList.users).insert({
+      uid: 1,
+      user: 'Super Admin',
+      pass: null,
+      token: null,
+      active: 1,
+      rnid: 1,
+      created_at: new Date(),
+    })
+  }
 
   static deleteTbl = async (knex) => {
     await Object.keys(tableList)
