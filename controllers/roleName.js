@@ -46,7 +46,7 @@ async function createRoleName(req, res) {
       created_by: 1,
       rpid: filterRolePath(tablePath),
       action: 'create',
-      message: `ID: ${id[0]} create success.`,
+      message: `ID: ${id} create success.`,
     });
     res.status(200).json({ message: 'Successful', data: { id } });
   } catch (error) {
