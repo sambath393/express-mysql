@@ -7,6 +7,7 @@ class Roles {
     return {
       rpid: parseInt(obj.rpid), // role path id
       rnid: parseInt(obj.rnid),
+      view: Boolean(obj.view),
       create: Boolean(obj.create),
       update: Boolean(obj.update),
       delete: Boolean(obj.delete),
@@ -55,20 +56,25 @@ class Roles {
   };
 
   static getByRoleNamesId = async (knex, rnid) => {
-    return knex(this.tablePath)
-      .where('rnid', rnid)
-      .join(tableList.role_paths, `${this.tablePath}.rpid`, '=', `${tableList.role_paths}.id`)
-      .join(tableList.role_names, `${this.tablePath}.rnid`, '=', `${tableList.role_names}.id`)
-      .column(
-        `${this.tablePath}.id`,
-        'create',
-        'update',
-        'delete',
-        'rpid',
-        'rnid',
-        { rp_name: 'role_paths.name' },
-        { rn_name: 'role_names.name' }
-      );
+    const data = await knex(this.tablePath)
+    .where('rnid', rnid)
+    .join(tableList.role_paths, `${this.tablePath}.rpid`, '=', `${tableList.role_paths}.id`)
+    .join(tableList.role_names, `${this.tablePath}.rnid`, '=', `${tableList.role_names}.id`)
+    .column(
+      `${this.tablePath}.id`,
+      'view',
+      'create',
+      'update',
+      'delete',
+      'rpid',
+      'rnid',
+      { rp_name: 'role_paths.name' },
+      { rn_name: 'role_names.name' }
+    );
+    
+    return {
+      data
+    }
   };
 
   static create = async (knex, data) => {

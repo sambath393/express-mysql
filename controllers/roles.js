@@ -12,9 +12,9 @@ async function getRoles(req, res) {
     let data = [];
 
     if (rnid) {
-      data = await Roles.getByRoleNamesId(db, rnid)
-    } else if(paginate) {
-      data = await Roles.getAllByPaginate(db, JSON.parse(paginate))
+      data = await Roles.getByRoleNamesId(db, parseInt(rnid, 10));
+    } else if (paginate) {
+      data = await Roles.getAllByPaginate(db, JSON.parse(paginate));
     } else {
       data = await Roles.getAll(db);
     }
@@ -39,16 +39,18 @@ async function getRoles(req, res) {
 
 async function createRoles(req, res) {
   try {
-    const data = req.body;
-    const id = await Roles.create(db, data);
+    const { data } = req.body;
+    // const id = await Roles.create(db, data);
+
+    console.log(JSON.parse(data));
 
     await Logs.create(db, {
       created_by: 1,
       rpid: filterRolePath(tablePath),
       action: 'create',
-      message: `ID: ${id[0]} create success.`,
+      message: ` create success.`,
     });
-    res.status(200).json({ message: 'Successful', data: { id } });
+    res.status(200).json({ message: 'Successful' });
   } catch (error) {
     await Logs.create(db, {
       created_by: 1,
@@ -62,17 +64,27 @@ async function createRoles(req, res) {
 
 async function updateRoles(req, res) {
   try {
-    const { id } = req.query;
+    // const { id } = req.query;
     const data = req.body;
-    const resData = await Roles.updateById(db, id, data);
+    // const resData = await Roles.updateById(db, id, data);
+
+    const rp_data = JSON.parse(data.rp_data);
+
+    rp_data.map((load) => {
+      const id = load.id;
+      delete load.id;
+      delete load.rn_name;
+      delete load.rp_name;
+      return Roles.updateById(db, id, load);
+    });
 
     await Logs.create(db, {
       created_by: 1,
       rpid: filterRolePath(tablePath),
       action: 'update',
-      message: `ID: ${id[0]} update success.`,
+      message: `Role path update success.`,
     });
-    res.status(200).json({ message: 'Successful', data: { id: resData } });
+    res.status(200).json({ message: 'successful' });
   } catch (error) {
     await Logs.create(db, {
       created_by: 1,

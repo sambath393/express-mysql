@@ -33,13 +33,15 @@ async function getRoleName(req, res) {
 async function createRoleName(req, res) {
   try {
     const { roles } = req.query;
-    const data = req.body;
+    const { data } = req.body;
     let id = null;
-    
+
+    console.log(roles, JSON.parse(data));
+
     if (roles) {
-      id = await RoleName.createWithRoles(db, data);
+      id = await RoleName.createWithRoles(db, JSON.parse(data));
     } else {
-      id = await RoleName.create(db, data);
+      id = await RoleName.create(db, JSON.parse(data));
     }
 
     await Logs.create(db, {
