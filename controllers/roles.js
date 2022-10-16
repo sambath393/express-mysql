@@ -40,7 +40,7 @@ async function getRoles(req, res) {
 async function createRoles(req, res) {
   try {
     const { data } = req.body;
-    // const id = await Roles.create(db, data);
+    await Roles.create(db, data);
 
     console.log(JSON.parse(data));
 

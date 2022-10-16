@@ -61,16 +61,19 @@ async function createUsers(req, res) {
 async function updateUsers(req, res) {
   try {
     const { id } = req.query;
-    const data = req.body;
-    const resData = await Users.updateById(db, id, data);
+    const { data } = req.body;
+    const resData = await Users.updateById(db, id, JSON.parse(data));
 
     await Logs.create(db, {
       created_by: 1,
       rpid: filterRolePath(tablePath),
       action: 'update',
-      message: `ID: ${id[0]} update success.`,
+      message: `ID: update success.`,
     });
-    res.status(200).json({ message: 'Successful', data: { id: resData } });
+    res.status(200).json({
+      message: 'Successful',
+      data: { id: resData },
+    });
   } catch (error) {
     await Logs.create(db, {
       created_by: 1,

@@ -17,7 +17,7 @@ class Users {
   };
 
   static getAll = async (knex) => {
-    return knex(this.tablePath)
+    const res = knex(this.tablePath)
       .join(tableList.role_names, `${this.tablePath}.rnid`, '=', `${tableList.role_names}.id`)
       .column(
         `${this.tablePath}.id`,
@@ -29,8 +29,9 @@ class Users {
         'rnid',
         { rn_name: 'role_names.name' },
         `${this.tablePath}.created_at`,
-        `${this.tablePath}.updated_at`,
+        `${this.tablePath}.updated_at`
       );
+    return res.length > 1 ? res?.shift() : [];
   };
 
   static getByRoleNamesId = async (knex, rnid) => {
@@ -47,7 +48,7 @@ class Users {
         'rnid',
         { rn_name: 'role_names.name' },
         `${this.tablePath}.created_at`,
-        `${this.tablePath}.updated_at`,
+        `${this.tablePath}.updated_at`
       );
   };
 
@@ -58,7 +59,10 @@ class Users {
   static updateById = async (knex, id, data) => {
     return knex(this.tablePath)
       .where('id', '=', id)
-      .update({ ...data, updated_at: new Date() });
+      .update({ ...data, updated_at: new Date() })
+      .then((res) => {
+        return res;
+      });
   };
 }
 
