@@ -37,8 +37,8 @@ async function getUsers(req, res) {
 
 async function createUsers(req, res) {
   try {
-    const data = req.body;
-    const id = await Users.create(db, data);
+    const { data } = req.body;
+    const id = await Users.create(db, JSON.parse(data));
 
     await Logs.create(db, {
       created_by: 1,

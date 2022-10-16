@@ -17,13 +17,12 @@ class Users {
   };
 
   static getAll = async (knex) => {
-    const res = knex(this.tablePath)
+    const data = knex(this.tablePath)
       .join(tableList.role_names, `${this.tablePath}.rnid`, '=', `${tableList.role_names}.id`)
       .column(
         `${this.tablePath}.id`,
         'uid',
         'user',
-        'pass',
         'token',
         'active',
         'rnid',
@@ -31,7 +30,8 @@ class Users {
         `${this.tablePath}.created_at`,
         `${this.tablePath}.updated_at`
       );
-    return res.length > 1 ? res?.shift() : [];
+
+    return data
   };
 
   static getByRoleNamesId = async (knex, rnid) => {
