@@ -42,8 +42,6 @@ async function createRoles(req, res) {
     const { data } = req.body;
     await Roles.create(db, data);
 
-    console.log(JSON.parse(data));
-
     await Logs.create(db, {
       created_by: 1,
       rpid: filterRolePath(tablePath),

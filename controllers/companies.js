@@ -32,8 +32,8 @@ async function getCompanies(req, res) {
 
 async function createCompanies(req, res) {
   try {
-    const data = req.body;
-    const id = await Companies.create(db, data, 1);
+    const { data } = req.body;
+    const id = await Companies.create(db, JSON.parse(data), 1);
 
     await Logs.create(db, {
       created_by: 1,
@@ -56,8 +56,8 @@ async function createCompanies(req, res) {
 async function updateCompanies(req, res) {
   try {
     const { id } = req.query;
-    const data = req.body;
-    const resData = await Companies.updateById(db, id, data, 1);
+    const { data } = req.body;
+    const resData = await Companies.updateById(db, id, JSON.parse(data), 1);
 
     await Logs.create(db, {
       created_by: 1,

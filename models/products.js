@@ -21,7 +21,7 @@ class Products {
   };
 
   static getAll = async (knex) => {
-    return knex(this.tablePath).select();
+    return knex(this.tablePath).select().whereNull('deleted_at');
   };
 
   static create = async (knex, data, userId) => {
