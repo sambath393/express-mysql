@@ -25,6 +25,28 @@ class Quotes {
     return knex(this.tablePath).select();
   };
 
+  static getAllByPaginate = async (knex, paginate) => {
+
+    const data = await knex(this.tablePath)
+      .join(tableList.role_paths, `${this.tablePath}.rpid`, '=', `${tableList.role_paths}.id`)
+      .join(tableList.role_names, `${this.tablePath}.rnid`, '=', `${tableList.role_names}.id`)
+      .select('*')
+      .offset((parseInt(paginate.current, 10) - 1) * parseInt(paginate.limit, 10))
+      .limit(paginate.limit)
+      .groupBy('rnid')
+      .count('rnid', { as: 'rp_count' })
+      .column({ rp_name: 'role_paths.name' }, { rn_name: 'role_names.name' });
+      
+    return {
+      data,
+      paginate: {
+        current: parseInt(paginate.current, 10),
+        limit: parseInt(paginate.limit, 10),
+        total,
+      },
+    };
+  };
+
   static create = async (knex, data, userId) => {
     return knex(this.tablePath).insert({
       ...data,
